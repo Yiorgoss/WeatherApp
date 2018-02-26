@@ -49,7 +49,7 @@ export default class Iphone extends Component {
 		
 		// display all weather data
 		return (
-			<div class={ style.container } style={this.state.tst}>
+			<div class={ style.container } style={this.state.bgImage}> 
 				<div class={ style.header }>
 					<div class={ style.city }>{ this.state.locate }</div>
 					<div class={ style.conditions }>{ this.state.cond }</div>
@@ -108,20 +108,21 @@ export default class Iphone extends Component {
 		if(conditions.search(/snow/i) >= 0)			//Snow
 			return "background-image: url('---SNOW---');";
 
+		return "background-image: url('---DEFAULT---');"; //Default
 	}
 
 	parseResponse = (parsed_json) => {
 		var location = parsed_json['current_observation']['display_location']['city'];
 		var temp_c = parsed_json['current_observation']['temp_c'];
 		var conditions = parsed_json['current_observation']['weather'];
-		var test = conditions == "Mostly Cloudy" ?  "background-image: url('../../assets/backgrounds/cat.jpg');" : "background-image: url('../../assets/backgrounds/clear-iphone.jpg');";
+		var bgURL = parseConditions(conditions); //Get corresponding background image URL
 		
 		// set states for fields so they could be rendered later on
 			this.setState({
 				locate: location,
 				temp: temp_c,
 				cond : conditions,
-				tst: test
+				bgImage : bgURL
 		});      
 	}
 }
