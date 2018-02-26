@@ -23,7 +23,7 @@ export default class Iphone extends Component {
 	// a call to fetch weather data via wunderground
 	fetchWeatherData = () => {
 		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/country-code/city.json
-		var url = "http://api.wunderground.com/api/c78f1a13d2ca6971/conditions/q/UK/London.json";
+		var url = "http://api.wunderground.com/api/a5050eda0657b131/conditions/q/UK/London.json";
 		$.ajax({
 			url: url,
 			dataType: "jsonp",
@@ -41,7 +41,7 @@ export default class Iphone extends Component {
 		
 		// display all weather data
 		return (
-			<div class={ style.container }>
+			<div class={ style.container } style={this.state.tst}>
 				<div class={ style.header }>
 					<div class={ style.city }>{ this.state.locate }</div>
 					<div class={ style.conditions }>{ this.state.cond }</div>
@@ -59,12 +59,16 @@ export default class Iphone extends Component {
 		var location = parsed_json['current_observation']['display_location']['city'];
 		var temp_c = parsed_json['current_observation']['temp_c'];
 		var conditions = parsed_json['current_observation']['weather'];
+		var test = conditions == "Mostly Cloudy" ?  "background-image: url('../../assets/backgrounds/cat.jpg');" : "background-image: url('../../assets/backgrounds/clear-iphone.jpg');";
+
+		window.alert(test);
 
 		// set states for fields so they could be rendered later on
-		this.setState({
-			locate: location,
-			temp: temp_c,
-			cond : conditions
+			this.setState({
+				locate: location,
+				temp: temp_c,
+				cond : conditions,
+				tst: test
 		});      
 	}
 }
