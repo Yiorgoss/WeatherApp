@@ -23,7 +23,7 @@ export default class Iphone extends Component {
 	// a call to fetch weather data via wunderground
 	fetchWeatherData = () => {
 		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/country-code/city.json
-		var url = "http://api.wunderground.com/api/a5050eda0657b131/conditions/q/UK/London.json";
+		var url = "http://api.wunderground.com/api/a5050eda0657b131/conditions/q/UK/London.json";		
 		$.ajax({
 			url: url,
 			dataType: "jsonp",
@@ -34,6 +34,14 @@ export default class Iphone extends Component {
 		this.setState({ display: false });
 	}
 
+	fetchForecast = () => {
+		//Get  10 day forecast
+		var url = "http://api.wunderground.com/api/a5050eda0657b131/forecast10day/q/UK/London.json";
+		$.ajax({
+			//TO-DO: parse 7 day info from API
+		})
+	}
+
 	// the main render method for the iphone component
 	render() {
 		// check if temperature data is fetched, if so add the sign styling to the page
@@ -41,7 +49,7 @@ export default class Iphone extends Component {
 		
 		// display all weather data
 		return (
-			<div class={ style.container } style={this.state.tst}>
+			<div class={ style.container } style={this.state.bgImage}> 
 				<div class={ style.header }>
 					<div class={ style.city }>{ this.state.locate }</div>
 					<div class={ style.conditions }>{ this.state.cond }</div>
@@ -55,20 +63,66 @@ export default class Iphone extends Component {
 		);
 	}
 
+	//Parse the conditions and return the corresponding image URL
+	parseConditions = (conditions) => {
+		/* ICONS
+		clear - 							sunny w/ white clouds
+		overcast - 							grey clouds
+		Any cloud (regex for cloud)- 		white clouds
+		Thunderstorm (any)- 				grey cloud w/ lightning bolt
+		sunny- 							 	sun
+		light rain/drizzle- 				white cloud w/ rain
+		heavy rain/rain- 					Grey cloud w/ rain
+		Any snow (regex for snow)- 			snowy
+		*/
+
+		/* BG-IMAGES
+		clear (sunny with some clouds)
+		sunny (sun with no clouds)
+		overcast (grey clouds(?))
+		cloudy* (white clouds)
+		light rain
+		heavy rain
+		snowy*
+		thunderstorm*
+		*/
+		
+		if(conditions == "Clear")					//Clear
+			return "background-image: url('---SUNNY---');";
+
+		if(conditions == "Overcast") 				//Overcast
+			return "background-image: url('---GREY CLOUD---');";
+		
+		if(conditions.search(/drizzle/i) >= 0)		//Light Rain
+			return "background-image: url('---LIGHT RAIN---');";
+
+		if(conditions.search(/rain/i) >= 0)			//Heavy rain
+			return "background-image: url('---LIGHT RAIN---');";
+		
+		if(conditions.search(/cloud/i) >= 0)		//Cloudy
+			return "background-image: url('---WHITE CLOUD---');";
+		
+		if(conditions.search(/thunderstorm/i) >= 0) //Thunderstorm
+			return "background-image: url('---THUNDERSTORM---');";
+		
+		if(conditions.search(/snow/i) >= 0)			//Snow
+			return "background-image: url('---SNOW---');";
+
+		return "background-image: url('---DEFAULT---');"; //Default
+	}
+
 	parseResponse = (parsed_json) => {
 		var location = parsed_json['current_observation']['display_location']['city'];
 		var temp_c = parsed_json['current_observation']['temp_c'];
 		var conditions = parsed_json['current_observation']['weather'];
-		var test = conditions == "Mostly Cloudy" ?  "background-image: url('../../assets/backgrounds/cat.jpg');" : "background-image: url('../../assets/backgrounds/clear-iphone.jpg');";
-
-		window.alert(test);
-
+		var bgURL = parseConditions(conditions); //Get corresponding background image URL
+		
 		// set states for fields so they could be rendered later on
 			this.setState({
 				locate: location,
 				temp: temp_c,
 				cond : conditions,
-				tst: test
+				bgImage : bgURL
 		});      
 	}
 }
