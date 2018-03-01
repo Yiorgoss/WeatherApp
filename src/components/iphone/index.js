@@ -14,9 +14,10 @@ export default class Iphone extends Component {
 	// a constructor with initial set states
 	constructor(props){
 		super(props);
-		// temperature state
-		this.state.temp = "";
-		// button display state
+		this.state.location = {
+			city: "",
+			country: ""
+		}
 		this.setState({ display: true });
 	}
 
@@ -46,7 +47,19 @@ export default class Iphone extends Component {
 		})
     //this.setState({ display:false });
 	}
+	changeLocation = () => {
+		console.log( this.state.location.city);
+		console.log( this.state.location.country);
 
+	}
+	handleChangeFor = (propertyName) => (event) => {
+		const { location } = this.state;
+		const newLocation = {
+			...location,
+			[propertyName]: event.target.value
+		};
+		this.setState({ location: newLocation });
+	}
 	// the main render method for the iphone component
 	render() {
 		// check if temperature data is fetched, if so add the sign styling to the page
@@ -67,6 +80,11 @@ export default class Iphone extends Component {
 				<div class={ style.details }></div>
 				<div class= { style_iphone.container }> 
 					{ this.state.display ? <Button class={ style_iphone.button } clickFunction={ this.fetchWeatherData }/ > : null }
+				</div>
+				<div>
+				<textarea onChange={this.handleChangeFor('city')} value={this.state.location.city} />
+				<textarea onChange={this.handleChangeFor('country')} value={this.state.location.country} />
+				<button onClick={this.changeLocation}> Add to Favourites </button>
 				</div>
 			</div>
 		);
