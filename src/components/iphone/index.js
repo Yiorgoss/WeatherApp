@@ -31,25 +31,34 @@ export default class Iphone extends Component {
 			error : function(req, err){ console.log('API call failed ' + err); }
 		})
 		// once the data grabbed, hide the button
-		this.setState({ display: false });
+		this.setState({ 
+      display: false,
+    });
 	}
-
-	fetchForecast = () => {
+	fetch10DayData = () => {
 		//Get  10 day forecast
 		var url = "http://api.wunderground.com/api/a5050eda0657b131/forecast10day/q/UK/London.json";
 		$.ajax({
-			//TO-DO: parse 7 day info from API
+      url: url,
+      dataType: "jsonp",
+      success: this.parseResponse,
+      error: function( req, err ){ console.log( 'API_CALL FAILED'+ err ) }
 		})
+    //this.setState({ display:false });
 	}
 
 	// the main render method for the iphone component
 	render() {
 		// check if temperature data is fetched, if so add the sign styling to the page
 		const tempStyles = this.state.temp ? `${style.temperature} ${style.filled}` : style.temperature;
+    var imgSrc = this.state.cond ? this.state.cond : 'clear-iphone';
+    var bgpic = {
+      backgroundImage: 'url(../../assets/backgrounds/'+imgSrc+'.jpg)'
+    };
 		
 		// display all weather data
 		return (
-			<div class={ style.container } style={this.state.bgImage}> 
+			<div class={ style.container } style={bgpic}> 
 				<div class={ style.header }>
 					<div class={ style.city }>{ this.state.locate }</div>
 					<div class={ style.conditions }>{ this.state.cond }</div>
@@ -62,10 +71,9 @@ export default class Iphone extends Component {
 			</div>
 		);
 	}
-
 	//Parse the conditions and return the corresponding image URL
 	parseConditions = (conditions) => {
-		/* ICONS
+    /* ICONS
 		clear - 							sunny w/ white clouds
 		overcast - 							grey clouds
 		Any cloud (regex for cloud)- 		white clouds
@@ -85,8 +93,7 @@ export default class Iphone extends Component {
 		heavy rain
 		snowy*
 		thunderstorm*
-		*/
-		
+		*/		
 		if(conditions == "Clear")					//Clear
 			return "background-image: url('---SUNNY---');";
 
@@ -115,14 +122,13 @@ export default class Iphone extends Component {
 		var location = parsed_json['current_observation']['display_location']['city'];
 		var temp_c = parsed_json['current_observation']['temp_c'];
 		var conditions = parsed_json['current_observation']['weather'];
-		var bgURL = parseConditions(conditions); //Get corresponding background image URL
-		
+		//var bgURL = parseConditions(conditions); //Get corresponding background image URL
 		// set states for fields so they could be rendered later on
 			this.setState({
 				locate: location,
 				temp: temp_c,
 				cond : conditions,
-				bgImage : bgURL
+        imgSrc: conditions
 		});      
 	}
 }
