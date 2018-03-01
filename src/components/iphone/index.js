@@ -17,7 +17,8 @@ export default class Iphone extends Component {
 		this.state.location = {
 			city: "London",
 			country: "Uk"
-		}
+		};
+		this.state.favourites = [];
 		this.setState({ display: true });
 	}
 
@@ -47,8 +48,12 @@ export default class Iphone extends Component {
 		})
     //this.setState({ display:false });
 	}
-	changeLocation = () => {
-		//TODO Add to favourites
+	addFavourites = (location) => {
+		console.log(location);
+		//console.log(this.location);
+		this.setState({
+			favourites: this.state.favourites.concatdfsdfs(location)
+		});
 
 	}
 	handleChangeFor = (propertyName) => (event) => {
@@ -81,9 +86,9 @@ export default class Iphone extends Component {
 					{ this.state.display ? <Button class={ style_iphone.button } clickFunction={ this.fetchWeatherData }/ > : null }
 				</div>
 				<div>
-				<textarea onChange={this.handleChangeFor('city')} value={this.state.location.city} />
-				<textarea onChange={this.handleChangeFor('country')} value={this.state.location.country} />
-				<button onClick={this.changeLocation}> Add to Favourites </button>
+				<input type="text" onChange={this.handleChangeFor('city')} value={this.state.location.city} />
+				<input type="text" onChange={this.handleChangeFor('country')} value={this.state.location.country} />
+				<button onClick={this.addFavourites(location)}> Add to Favourites </button>
 				</div>
 			</div>
 		);
