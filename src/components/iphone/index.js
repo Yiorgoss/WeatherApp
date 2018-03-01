@@ -15,8 +15,8 @@ export default class Iphone extends Component {
 	constructor(props){
 		super(props);
 		this.state.location = {
-			city: "",
-			country: ""
+			city: "London",
+			country: "Uk"
 		}
 		this.setState({ display: true });
 	}
@@ -24,7 +24,7 @@ export default class Iphone extends Component {
 	// a call to fetch weather data via wunderground
 	fetchWeatherData = () => {
 		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/country-code/city.json
-		var url = "http://api.wunderground.com/api/a5050eda0657b131/conditions/q/UK/London.json";		
+		var url = "http://api.wunderground.com/api/a5050eda0657b131/conditions/q/"+this.state.location.country+"/"+this.state.location.city+".json";		
 		$.ajax({
 			url: url,
 			dataType: "jsonp",
@@ -48,8 +48,7 @@ export default class Iphone extends Component {
     //this.setState({ display:false });
 	}
 	changeLocation = () => {
-		console.log( this.state.location.city);
-		console.log( this.state.location.country);
+		//TODO Add to favourites
 
 	}
 	handleChangeFor = (propertyName) => (event) => {
@@ -64,10 +63,10 @@ export default class Iphone extends Component {
 	render() {
 		// check if temperature data is fetched, if so add the sign styling to the page
 		const tempStyles = this.state.temp ? `${style.temperature} ${style.filled}` : style.temperature;
-    var imgSrc = this.state.cond ? this.state.cond : 'clear-iphone';
-    var bgpic = {
-      backgroundImage: 'url(../../assets/backgrounds/'+imgSrc+'.jpg)'
-    };
+    	var imgSrc = this.state.cond ? this.state.cond : 'clear-iphone';
+    	var bgpic = {
+     		backgroundImage: 'url(../../assets/backgrounds/'+imgSrc+'.jpg)'
+    	};
 		
 		// display all weather data
 		return (
