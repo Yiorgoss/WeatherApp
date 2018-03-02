@@ -14,11 +14,18 @@ export default class Iphone extends Component {
 	// a constructor with initial set states
 	constructor(props){
 		super(props);
-		this.state.location = {
-			city: "London",
-			country: "Uk"
+		this.state = {
+			location: {
+				city: 'London',
+				country: 'Uk',
+			},
+			favourites: [],
 		};
-		this.state.favourites = [];
+		// this.state.location = {
+		// 	city: "London",
+		// 	country: "Uk"
+		// };
+		// this.state.favourites = [];
 		this.setState({ display: true });
 	}
 
@@ -48,12 +55,14 @@ export default class Iphone extends Component {
 		})
     //this.setState({ display:false });
 	}
-	addFavourites = (location) => {
-		console.log(location);
+	addFavourites = (locationn) => {
 		//console.log(this.location);
-		this.setState({
-			favourites: this.state.favourites.concatdfsdfs(location)
-		});
+		if( this.state.favourites.indexOf(locationn) === -1){
+			this.setState({
+				favourites: this.state.favourites.concat( this.state.location)
+			});
+		}
+		console.log(this.state.favourites);
 
 	}
 	handleChangeFor = (propertyName) => (event) => {
@@ -88,7 +97,21 @@ export default class Iphone extends Component {
 				<div>
 				<input type="text" onChange={this.handleChangeFor('city')} value={this.state.location.city} />
 				<input type="text" onChange={this.handleChangeFor('country')} value={this.state.location.country} />
-				<button onClick={this.addFavourites(location)}> Add to Favourites </button>
+				<button onClick={() => this.addFavourites(this.state.location)}> Add to Favourites </button>
+				</div>
+				<div>
+					<h1>Favourites</h1>
+					{ this.state.favourites && this.state.favourites.length ?
+						<div>
+							<ul>
+								{ this.state.favourites.map( favourite =>
+									<li>
+										{favourite.city}, {favourite.country}
+									</li>
+								)}
+							</ul>
+						</div>
+					: "favourites"}
 				</div>
 			</div>
 		);
