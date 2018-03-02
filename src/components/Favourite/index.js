@@ -1,13 +1,13 @@
 import { h } from 'preact';
 
-const Favourite = ({ favourites }) => 
+const Favourites = ({ favourites }) => 
 
 	<div>
 		<h1>Favourites</h1>
 		{ favourites && favourites.length ?
 			<div>
 				<ul>
-				{ this.state.favourites.map( favourite =>
+				{ favourites.map( favourite =>
 					<li>
 						{favourite.city}, {favourite.country}
 					</li>
@@ -17,4 +17,4 @@ const Favourite = ({ favourites }) =>
 		: "No Favourites"}
 	</div>
 
-export default Favourite
+export default Favourites

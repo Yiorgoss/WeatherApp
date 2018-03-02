@@ -63,7 +63,7 @@ export default class Iphone extends Component {
 		// console.log(this.location);
 		if( this.state.favourites.indexOf(location) === -1){
 			this.setState({
-				favourites: this.state.favourites.concat( this.state.location)
+				favourites: this.state.favourites.concat( this.state.location),
 			});
 			console.log("GGGG");
 		}
@@ -79,7 +79,7 @@ export default class Iphone extends Component {
 		this.setState({ location: newLocation });
 	}
 	// the main render method for the iphone component
-	render({}, {favourites}) {
+	render() {
 		// check if temperature data is fetched, if so add the sign styling to the page
 		// const tempStyles = this.state.temp ? `${style.temperature} ${style.filled}` : style.temperature;
     	var imgSrc = this.state.cond ? this.state.cond : 'clear-iphone';
@@ -106,7 +106,7 @@ export default class Iphone extends Component {
 					<input type="text" onChange={this.handleChangeFor('country')} value={this.state.location.country} />
 					<Button class={ style_iphone.button } clickFunction={() => this.addToFavourite(this.state.location) } display="Add To Favourite" />
 				</div>
-				<Favourite favourite={this.favourite} />
+				<Favourite favourites={this.state.favourites} />
 			</div>
 		);
 	}
