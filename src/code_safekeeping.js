@@ -1,3 +1,5 @@
+
+<Button class={ style_iphone.button } clickFunction={() => this.addToFavourite(this.state.location) } display="Add To Favourite" />
 	//Parse the conditions and return the corresponding image URL
 	parseConditions = (conditions) => {
     /* ICONS

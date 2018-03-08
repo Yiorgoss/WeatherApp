@@ -19,6 +19,9 @@ export default class Iphone extends Component {
 				country: 'Uk',
 			},
 			favourites: [],
+			page1: true,
+			page2: false,
+
 		};
 		this.setState({ display: true });
 	}
@@ -57,7 +60,7 @@ export default class Iphone extends Component {
       success: this.parseResponse,
       error: function( req, err ){ console.log( 'API_CALL FAILED'+ err ) }
 		})
-    //this.setState({ display:false });
+		this.setState({ page1: false, page2: true});
 	}
 	addToFavourite = (location) => {
 		// console.log(this.location);
@@ -65,10 +68,22 @@ export default class Iphone extends Component {
 			this.setState({
 				favourites: this.state.favourites.concat( this.state.location),
 			});
-			console.log("GGGG");
 		}
 		console.log(this.state.favourites);
 
+	}
+	changeWeather = () => {
+		this.fetchWeatherData();
+		this.setState({
+			page1: true,
+			page2: false,
+		});
+	}
+	changeLocation = () => {
+		this.setState({
+			page1: false,
+			page2: true,
+		});
 	}
 	handleChangeFor = (propertyName) => (event) => {
 		const { location } = this.state;
@@ -77,6 +92,9 @@ export default class Iphone extends Component {
 			[propertyName]: event.target.value
 		};
 		this.setState({ location: newLocation });
+	}
+	componentDidMount(){
+		this.fetchWeatherData();
 	}
 	// the main render method for the iphone component
 	render() {
@@ -97,16 +115,19 @@ export default class Iphone extends Component {
 				</div>
 				<div class={ style.details }></div>
 				<div class= { style_iphone.container }> 
-					{ this.state.display ? 
-						<Button class={ style_iphone.button } clickFunction={ this.fetchWeatherData } display="Display Weather"/ > 
+					{ this.state.page1 ? 
+						<Button class={ style_iphone.button } clickFunction={this.changeLocation } display="Change Location"/ > 
 					: null }
 				</div>
+				{ this.state.page2 ? 
 				<div>
 					<input type="text" onChange={this.handleChangeFor('city')} value={this.state.location.city} />
 					<input type="text" onChange={this.handleChangeFor('country')} value={this.state.location.country} />
+					<Button class={ style_iphone.button } clickFunction={() => this.changeWeather() } display="Show Weather" />
 					<Button class={ style_iphone.button } clickFunction={() => this.addToFavourite(this.state.location) } display="Add To Favourite" />
 				</div>
-				<Favourite favourites={this.state.favourites} />
+				: null }
+
 			</div>
 		);
 	}
