@@ -7,7 +7,8 @@ import style_iphone from '../button/style_iphone';
 import $ from 'jquery';
 // import the Button component
 import Button from '../button';
-import Favourite from '../Favourite';
+import Favourite from '../favourites';
+import { Link } from 'preact-router/match';
 
 export default class Iphone extends Component {
 
@@ -66,11 +67,21 @@ export default class Iphone extends Component {
 		// console.log(this.location);
 		if( this.state.favourites.indexOf(location) === -1){
 			this.setState({
-				favourites: this.state.favourites.concat( this.state.location),
+				favourites: this.state.favourites.concat( location),
 			});
 		}
 		console.log(this.state.favourites);
-
+		console.log(this.state.favourites[0].city);
+		console.log("GGG");
+	}
+	removeFavourite = (location) => {
+		var index = this.state.favourites.indexOf(location);
+		console.log(this.state.favourites);
+		if( index != -1 ) {
+			this.state.favourites.splice(index, 1);
+			this.forceUpdate();
+		}
+		console.log(this.state.favourites);
 	}
 	changeWeather = () => {
 		this.fetchWeatherData();
@@ -124,7 +135,11 @@ export default class Iphone extends Component {
 					<input type="text" onChange={this.handleChangeFor('city')} value={this.state.location.city} />
 					<input type="text" onChange={this.handleChangeFor('country')} value={this.state.location.country} />
 					<Button class={ style_iphone.button } clickFunction={() => this.changeWeather() } display="Show Weather" />
-					<Button class={ style_iphone.button } clickFunction={() => this.addToFavourite(this.state.location) } display="Add To Favourite" />
+					{ this.state.favourites.indexOf(this.state.location) === -1 ? 
+						<Button class={ style_iphone.button } clickFunction={() => this.addToFavourite(this.state.location) } display="Add To Favourite" />
+						: <Button class={ style_iphone.button } clickFunction={() => this.removeFavourite(this.state.location) } display="Remove Favourite" />
+ 					}
+					<Link href="/favourites"> Favourite </Link>
 				</div>
 				: null }
 

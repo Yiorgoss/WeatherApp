@@ -1,6 +1,6 @@
 import { h } from 'preact';
 
-const Favourites = ({ favourites }) => 
+const Favourite = ({ favourites }) => 
 
 	<div>
 		<h1>Favourites</h1>
@@ -17,4 +17,4 @@ const Favourites = ({ favourites }) =>
 		: "No Favourites"}
 	</div>
 
-export default Favourites
+export default Favourite
