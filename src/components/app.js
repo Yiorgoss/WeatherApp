@@ -5,7 +5,7 @@ import Router from 'preact-router';
 // import required Components from 'components/'
 import Iphone from './iphone';
 import Ipad from './ipad';
-import Favourite from './favourites'
+import Favourite from './favourites';
 
 const App = () => 
 	<Router>

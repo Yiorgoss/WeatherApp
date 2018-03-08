@@ -1,5 +1,6 @@
 // import preact
 import { h, render, Component } from 'preact';
+import { Link } from 'preact-router/match';
 // import stylesheets for ipad & button
 import style from './style';
 import style_iphone from '../button/style_iphone';
@@ -8,7 +9,7 @@ import $ from 'jquery';
 // import the Button component
 import Button from '../button';
 import Favourite from '../favourites';
-import { Link } from 'preact-router/match';
+
 
 export default class Iphone extends Component {
 
@@ -42,12 +43,11 @@ export default class Iphone extends Component {
 	success = (pos) => {
 	    var crd = pos.coords;
 	    this.setState({
-	    	long: crd.longitude,
 	    	lat: crd.latitude,
+	    	long: crd.longitude,
 	    });
-
-	    var long = this.state.long.toFixed(6);
-		var lat = this.state.lat.toFixed(6);
+	    var long = this.state.long;
+		var lat = this.state.lat;
 		var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+long+"&key=AIzaSyBCrRRJ42Mu41G6Pauhfo4MXdElDmfgKdM";
 		$.ajax({
 			url: url,
@@ -70,9 +70,6 @@ export default class Iphone extends Component {
 			success : this.parseResponse,
 			error : function(req, err){ console.log('API call failed ' + err); }
 		});
-		this.setState({ 
-     		display: false,
-    	});
 	}
 	parseResponse = (parsed_json) => {
 		var location = parsed_json['current_observation']['display_location']['city'];
@@ -99,7 +96,6 @@ export default class Iphone extends Component {
 		this.setState({ page1: false, page2: true});
 	}
 	addToFavourite = (location) => {
-		// console.log(this.location);
 		if( this.state.favourites.indexOf(location) === -1){
 			this.setState({
 				favourites: this.state.favourites.concat( location),
@@ -108,12 +104,10 @@ export default class Iphone extends Component {
 	}
 	removeFavourite = (location) => {
 		var index = this.state.favourites.indexOf(location);
-		console.log(this.state.favourites);
 		if( index != -1 ) {
 			this.state.favourites.splice(index, 1);
 			this.forceUpdate();
 		}
-		console.log(this.state.favourites);
 	}
 	changeWeather = () => {
 		this.fetchWeatherData();
@@ -148,6 +142,7 @@ export default class Iphone extends Component {
 		this.setState({ location: newLocation });
 	}
 	componentDidMount(){
+		
 		this.geoLocation();
 	}
 	// the main render method for the iphone component
@@ -183,11 +178,8 @@ export default class Iphone extends Component {
 						<Button class={ style_iphone.button } clickFunction={() => this.addToFavourite(this.state.location) } display="Add To Favourite" />
 						: <Button class={ style_iphone.button } clickFunction={() => this.removeFavourite(this.state.location) } display="Remove Favourite" />
  					}
-					<Link href={this.showFavourites()}> Favourite </Link>
-					<button onClick={this.geoLocation()}> GGGG</button>
 				</div>
 				: null }
-
 			</div>
 		);
 	}
