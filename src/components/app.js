@@ -9,8 +9,8 @@ import Favourite from './favourites'
 
 const App = () => 
 	<Router>
-		<Iphone path="/" />
-		<Favourite path="/favourites" />
+		<Iphone path="/:favourites?" />
+		<Favourite path="/favourites/:favourites" />
 	</Router>
 
 export default App

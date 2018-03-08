@@ -70,9 +70,6 @@ export default class Iphone extends Component {
 				favourites: this.state.favourites.concat( location),
 			});
 		}
-		console.log(this.state.favourites);
-		console.log(this.state.favourites[0].city);
-		console.log("GGG");
 	}
 	removeFavourite = (location) => {
 		var index = this.state.favourites.indexOf(location);
@@ -96,6 +93,16 @@ export default class Iphone extends Component {
 			page2: true,
 		});
 	}
+
+	showFavourites = () => {
+		var temp = this.state.favourites
+		var str="/favourites/";
+		var i;
+		for( i=0;i<temp.length; i++){
+			str += temp[i].city+"-"+temp[i].country+"=";
+		}
+		return str;
+	}
 	handleChangeFor = (propertyName) => (event) => {
 		const { location } = this.state;
 		const newLocation = {
@@ -112,6 +119,7 @@ export default class Iphone extends Component {
 		// check if temperature data is fetched, if so add the sign styling to the page
 		// const tempStyles = this.state.temp ? `${style.temperature} ${style.filled}` : style.temperature;
     	var imgSrc = this.state.cond ? this.state.cond : 'clear-iphone';
+    	imgSrc = "clear-iphone";
     	var bgpic = {
      		backgroundImage: 'url(../../assets/backgrounds/'+imgSrc+'.jpg)'
     	};
@@ -139,7 +147,7 @@ export default class Iphone extends Component {
 						<Button class={ style_iphone.button } clickFunction={() => this.addToFavourite(this.state.location) } display="Add To Favourite" />
 						: <Button class={ style_iphone.button } clickFunction={() => this.removeFavourite(this.state.location) } display="Remove Favourite" />
  					}
-					<Link href="/favourites"> Favourite </Link>
+					<Link href={this.showFavourites()}> Favourite </Link>
 				</div>
 				: null }
 
