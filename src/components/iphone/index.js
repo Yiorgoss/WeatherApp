@@ -14,10 +14,11 @@ export default class Iphone extends Component {
 
 	constructor(props){
 		super(props);
+		//state defaults to Barcelona for proof of geolocation working 
 		this.state = {
 			location: {
-				city: 'London',
-				country: 'Uk',
+				city: 'Barcelona',
+				country: 'Spain',
 			},
 			favourites: [],
 			page1: true,
@@ -26,15 +27,49 @@ export default class Iphone extends Component {
 		};
 		this.setState({ display: true });
 	}
+	convertToCity = (parsed_json) => {
+		var locationn = parsed_json['results'][3]['formatted_address'].split(", ");
+		console.log( parsed_json['results'][3]['formatted_address']);
+		this.setState({
+			location: {
+				city: locationn[0],
+				country: locationn[1],
+			},
+		});
+		this.forceUpdate();	
+		this.fetchWeatherData();
+	}
+	success = (pos) => {
+	    var crd = pos.coords;
+	    this.setState({
+	    	long: crd.longitude,
+	    	lat: crd.latitude,
+	    });
 
+	    var long = this.state.long.toFixed(6);
+		var lat = this.state.lat.toFixed(6);
+		var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+long+"&key=AIzaSyBCrRRJ42Mu41G6Pauhfo4MXdElDmfgKdM";
+		$.ajax({
+			url: url,
+			dataType: "json",
+			success: this.convertToCity,
+			error : function( req, err){ console.log(' API call failed ' + err); }
+		})
+	}
+	geoLocation = () => {
+		//geolocation get long/lat
+		navigator.geolocation.getCurrentPosition(this.success);
+	}
 	fetchWeatherData = () => {
-		var url = "http://api.wunderground.com/api/a5050eda0657b131/conditions/q/"+this.state.location.country+"/"+this.state.location.city+".json";		
+		var country = this.state.location.country;
+		var city = this.state.location.city;
+		var url = "http://api.wunderground.com/api/a5050eda0657b131/conditions/q/"+country+"/"+city+".json";		
 		$.ajax({
 			url: url,
 			dataType: "jsonp",
 			success : this.parseResponse,
 			error : function(req, err){ console.log('API call failed ' + err); }
-		})
+		});
 		this.setState({ 
      		display: false,
     	});
@@ -103,6 +138,7 @@ export default class Iphone extends Component {
 		}
 		return str;
 	}
+
 	handleChangeFor = (propertyName) => (event) => {
 		const { location } = this.state;
 		const newLocation = {
@@ -112,7 +148,7 @@ export default class Iphone extends Component {
 		this.setState({ location: newLocation });
 	}
 	componentDidMount(){
-		this.fetchWeatherData();
+		this.geoLocation();
 	}
 	// the main render method for the iphone component
 	render() {
@@ -148,6 +184,7 @@ export default class Iphone extends Component {
 						: <Button class={ style_iphone.button } clickFunction={() => this.removeFavourite(this.state.location) } display="Remove Favourite" />
  					}
 					<Link href={this.showFavourites()}> Favourite </Link>
+					<button onClick={this.geoLocation()}> GGGG</button>
 				</div>
 				: null }
 
