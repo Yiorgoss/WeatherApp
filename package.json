@@ -78,10 +78,19 @@
     "preact-router": "^2.0.0",
     "promise-polyfill": "^6.0.2",
     "proptypes": "^0.14.3",
-    "serve": "^2.0.0"
+    "serve": "^2.0.0",
+    "swipe-js": "^2.2.0"
   },
   "main": "webpack.config.babel.js",
   "directories": {
     "test": "test"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yiorgoss/WeatherApp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Yiorgoss/WeatherApp/issues"
+  },
+  "homepage": "https://github.com/Yiorgoss/WeatherApp#readme"
 }

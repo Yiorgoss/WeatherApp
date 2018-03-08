@@ -1,5 +1,4 @@
-// import preact
-import { h, render, Component } from 'preact';
+// import preactimport { h, render, Component } from 'preact';
 // import stylesheets for ipad & button
 import style from './style';
 import style_iphone from '../button/style_iphone';
@@ -8,8 +7,6 @@ import $ from 'jquery';
 // import the Button component
 import Button from '../button';
 import CurrentWeather from '../currentWeather';
-
-import FavouriteScreen from '../FavouriteScreen';
 import HourlyWeather from '../hourlyWeather';
 export default class Iphone extends Component {
 //var Iphone = React.createClass({
@@ -17,24 +14,16 @@ export default class Iphone extends Component {
 	// a constructor with initial set states
 	constructor(props){
 		super(props);
-		this.state.screen = "";
-		this.state.cond = "";
 		this.fetchWeatherData();
-		this.state = {
-			location: {
-				city: 'London',
-				country: 'Uk',
-			},
-			favourites: [],
-		};
-
-		this.state.setLoc = 'tes';
-
+		// temperature state
+		// button display state
+			
 	}
 
+	
 	// a call to fetch weather data via wunderground
 	fetchWeatherData = () => {
-		// API URL with a structure of : http://api.wunderground.com/api/key/feature/q/country-code/city.json
+		
 		var url = "http://api.wunderground.com/api/a5050eda0657b131/conditions/q/UK/London.json";		
 		$.ajax({
 			url: url,
@@ -42,29 +31,24 @@ export default class Iphone extends Component {
 			success : this.parseResponse,
 			error : function(req, err){ console.log('API call failed ' + err); }
 		})
-	}	
-
+	}
 	
 
 	// the main render method for the iphone component
 	render() {
     		// check if temperature data is fetched, if so add the sign styling to the page
 		const tempStyles = this.state.temp ? `${style.temperature} ${style.filled}` : style.temperature;
-    		var imgSrc = this.state.cond ? this.parseConditions(this.state.cond) : 'Overcast';
-    		var bgpic = {backgroundImage: 'url(../../assets/backgrounds/'+imgSrc+'.jpg)' 	};
-		//em create hourly breakdown variable (div containers to be drawn to screen)
-		
-
+    		var imgSrc = this.state.cond ? parseConditions(this.state.cond) : 'Overcast';
+    		var bgpic = {backgroundImage: 'url(../../assets/backgrounds/'+imgSrc+'.jpg)'};
+	
 		//display location screen
 		if(this.state.screen == "locationscreen"){
 			return (
 			//current weather	°
-
 		       <div class={ style.container } style={bgpic}> 	
-					<Button class={ style_iphone.button } clickFunction={() => this.changeScreen("homescreen")} buttonName = ""  />
-			
-			<FavouriteScreen changeLocation={this.changeLocation}/>
-
+			<Button class={ style_iphone.button } clickFunction={() => this.changeScreen("homescreen") } buttonName = "Home"  />			
+				Put Location Componants here
+				
 			</div>
 			);	
 		}
@@ -85,17 +69,16 @@ export default class Iphone extends Component {
 			//current weather	°
 		       <div class={ style.container } style={bgpic}> 				
 				<Button class={ style_iphone.button } clickFunction={() => this.changeScreen("locationscreen")} buttonName = "locations"  />
-			{this.state.setLoc}
+				
 				<CurrentWeather/>
 				<HourlyWeather/>		
 				
 			</div>
-		);				
-
+		);		
 
 	
 	}//end render
-	
+
 	changeScreen = (s) =>{
 		
 		console.log("GGGG");
@@ -105,38 +88,34 @@ export default class Iphone extends Component {
 		
 	}
 
-	changeLocation= (data) => {
-		this.setState({ setLoc : data,} );
-	}
-
 	//Parse the conditions and return the corresponding image URL
 	parseConditions = (conditions) => {
     
 		if(conditions == "Clear")					//Clear
-			return "clear";
+			return "overcast";
 
 		if(conditions == "Overcast") 				//Overcast
-			return "overcast";
+			return "default";
 		
 		if(conditions.search(/drizzle/i) >= 0)		//Light Rain
-			return "lightrain";
+			return "default";
 
 		if(conditions.search(/rain/i) >= 0)			//Heavy rain
-			return "rain";
+			return "default";
 		
 		if(conditions.search(/cloud/i) >= 0)		//Cloudy
-			return "clouds";
+			return "default";
 		
 		if(conditions.search(/thunderstorm/i) >= 0) //Thunderstorm
-			return "thunder";
+			return "default";
 		
 		if(conditions.search(/snow/i) >= 0)			//Snow
-			return "snow";
+			return "default";
 		
 		if(conditions.search(/ice/i) >=0)			//Snow
-			return "ice";
+			return "default";
 
-		return "default"; //Default
+		return "overcast"; //Default
 	}
 
 	//set the return of API calls to location,temp and conditions variables
@@ -144,13 +123,12 @@ export default class Iphone extends Component {
 		var location = parsed_json['current_observation']['display_location']['city'];
 		var temp_c = parsed_json['current_observation']['temp_c'];
 		var conditions = parsed_json['current_observation']['weather'];
-		//var bgURL = parseConditions(conditions); //Get corresponding background image URL
+		var bgURL = parseConditions(conditions); //Get corresponding background image URL
 		// set states for fields so they could be rendered later on
-			this.setState({
+		this.setState({
 				locate: location,
 				temp: temp_c,
-				cond : conditions,
-				imgSrc: conditions,				
+				cond : conditions,				
 		});      
 	}
 }

@@ -8,8 +8,6 @@ import $ from 'jquery';
 // import the Button component
 import Button from '../button';
 import CurrentWeather from '../currentWeather';
-
-import FavouriteScreen from '../FavouriteScreen';
 import HourlyWeather from '../hourlyWeather';
 export default class Iphone extends Component {
 //var Iphone = React.createClass({
@@ -17,19 +15,8 @@ export default class Iphone extends Component {
 	// a constructor with initial set states
 	constructor(props){
 		super(props);
-		this.state.screen = "";
-		this.state.cond = "";
 		this.fetchWeatherData();
-		this.state = {
-			location: {
-				city: 'London',
-				country: 'Uk',
-			},
-			favourites: [],
-		};
-
-		this.state.setLoc = 'tes';
-
+		
 	}
 
 	// a call to fetch weather data via wunderground
@@ -42,7 +29,8 @@ export default class Iphone extends Component {
 			success : this.parseResponse,
 			error : function(req, err){ console.log('API call failed ' + err); }
 		})
-	}	
+	}
+	
 
 	
 
@@ -50,94 +38,57 @@ export default class Iphone extends Component {
 	render() {
     		// check if temperature data is fetched, if so add the sign styling to the page
 		const tempStyles = this.state.temp ? `${style.temperature} ${style.filled}` : style.temperature;
-    		var imgSrc = this.state.cond ? this.parseConditions(this.state.cond) : 'Overcast';
+    		var imgSrc = this.state.cond ? this.state.cond : 'clear-iphone';
     		var bgpic = {backgroundImage: 'url(../../assets/backgrounds/'+imgSrc+'.jpg)' 	};
 		//em create hourly breakdown variable (div containers to be drawn to screen)
 		
 
-		//display location screen
-		if(this.state.screen == "locationscreen"){
-			return (
-			//current weather	°
-
-		       <div class={ style.container } style={bgpic}> 	
-					<Button class={ style_iphone.button } clickFunction={() => this.changeScreen("homescreen")} buttonName = ""  />
-			
-			<FavouriteScreen changeLocation={this.changeLocation}/>
-
-			</div>
-			);	
-		}
-
-		//display weekly breakdown
-		if(this.state.screen == "weekscreen"){
-			return (
-			//current weather	°
-		       <div class={ style.container } style={bgpic}> 				
-				weekly
-				
-			</div>
-			);	
-		}
-
 		// display all weather data
 		return (
 			//current weather	°
-		       <div class={ style.container } style={bgpic}> 				
-				<Button class={ style_iphone.button } clickFunction={() => this.changeScreen("locationscreen")} buttonName = "locations"  />
-			{this.state.setLoc}
-				<CurrentWeather/>
-				<HourlyWeather/>		
+			
+			<div class={ style.current}>
+				<div class={ style.city }>{ this.state.locate }</div>
+				<div class={ style.conditions }>{ this.state.cond }</div>
+				<div class={ tempStyles }>{ this.state.temp }</div>
+			</div>			
 				
-			</div>
-		);				
+		);			
 
 
 	
 	}//end render
-	
-	changeScreen = (s) =>{
-		
-		console.log("GGGG");
-		this.setState({ 
-				screen: s, 
-		});
-		
-	}
-
-	changeLocation= (data) => {
-		this.setState({ setLoc : data,} );
-	}
 
 	//Parse the conditions and return the corresponding image URL
 	parseConditions = (conditions) => {
     
 		if(conditions == "Clear")					//Clear
-			return "clear";
+			return "background-image: url('---SUNNY---');";
 
 		if(conditions == "Overcast") 				//Overcast
-			return "overcast";
+			return "background-image: url('---GREY CLOUD---');";
 		
 		if(conditions.search(/drizzle/i) >= 0)		//Light Rain
-			return "lightrain";
+			return "background-image: url('---LIGHT RAIN---');";
 
 		if(conditions.search(/rain/i) >= 0)			//Heavy rain
-			return "rain";
+			return "background-image: url('---LIGHT RAIN---');";
 		
 		if(conditions.search(/cloud/i) >= 0)		//Cloudy
-			return "clouds";
+			return "background-image: url('---WHITE CLOUD---');";
 		
 		if(conditions.search(/thunderstorm/i) >= 0) //Thunderstorm
-			return "thunder";
+			return "background-image: url('---THUNDERSTORM---');";
 		
 		if(conditions.search(/snow/i) >= 0)			//Snow
-			return "snow";
+			return "background-image: url('---SNOW---');";
 		
 		if(conditions.search(/ice/i) >=0)			//Snow
-			return "ice";
+			return "background-image: url('---SNOW---');";
 
-		return "default"; //Default
+		return "background-image: url('---DEFAULT---');"; //Default
 	}
+
 
 	//set the return of API calls to location,temp and conditions variables
 	parseResponse = (parsed_json) => {

@@ -8,8 +8,6 @@ import $ from 'jquery';
 // import the Button component
 import Button from '../button';
 import CurrentWeather from '../currentWeather';
-
-import FavouriteScreen from '../FavouriteScreen';
 import HourlyWeather from '../hourlyWeather';
 export default class Iphone extends Component {
 //var Iphone = React.createClass({
@@ -20,16 +18,7 @@ export default class Iphone extends Component {
 		this.state.screen = "";
 		this.state.cond = "";
 		this.fetchWeatherData();
-		this.state = {
-			location: {
-				city: 'London',
-				country: 'Uk',
-			},
-			favourites: [],
-		};
-
-		this.state.setLoc = 'tes';
-
+		this.state.favourites = [];
 	}
 
 	// a call to fetch weather data via wunderground
@@ -42,7 +31,8 @@ export default class Iphone extends Component {
 			success : this.parseResponse,
 			error : function(req, err){ console.log('API call failed ' + err); }
 		})
-	}	
+	}
+	
 
 	
 
@@ -61,10 +51,8 @@ export default class Iphone extends Component {
 			//current weather	°
 
 		       <div class={ style.container } style={bgpic}> 	
-					<Button class={ style_iphone.button } clickFunction={() => this.changeScreen("homescreen")} buttonName = ""  />
-			
-			<FavouriteScreen changeLocation={this.changeLocation}/>
-
+			<Button class={ style_iphone.button } clickFunction={() => this.changeScreen("homescreen") } buttonName = "Home"  />			
+				Put Location Componants here
 			</div>
 			);	
 		}
@@ -85,7 +73,7 @@ export default class Iphone extends Component {
 			//current weather	°
 		       <div class={ style.container } style={bgpic}> 				
 				<Button class={ style_iphone.button } clickFunction={() => this.changeScreen("locationscreen")} buttonName = "locations"  />
-			{this.state.setLoc}
+					
 				<CurrentWeather/>
 				<HourlyWeather/>		
 				
@@ -105,9 +93,6 @@ export default class Iphone extends Component {
 		
 	}
 
-	changeLocation= (data) => {
-		this.setState({ setLoc : data,} );
-	}
 
 	//Parse the conditions and return the corresponding image URL
 	parseConditions = (conditions) => {
@@ -138,6 +123,26 @@ export default class Iphone extends Component {
 
 		return "default"; //Default
 	}
+	addToFavourite = (location) => {
+		// console.log(this.location);
+		if( this.state.favourites.indexOf(location) === -1){
+			this.setState({
+				favourites: this.state.favourites.concat( this.state.location),
+			});
+			console.log("GGGG");
+		}
+		console.log(this.state.favourites);
+
+	}
+	handleChangeFor = (propertyName) => (event) => {
+		const { location } = this.state;
+		const newLocation = {
+			...location,
+			[propertyName]: event.target.value
+		};
+		this.setState({ location: newLocation });
+	}
+	// the m
 
 	//set the return of API calls to location,temp and conditions variables
 	parseResponse = (parsed_json) => {
