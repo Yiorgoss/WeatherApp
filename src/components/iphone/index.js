@@ -24,10 +24,15 @@ export default class Iphone extends Component {
 			favourites: [],
 			favurl: []
 		};
+		this.state.hTemp = [];
+		this.state.hCond = [];
+		this.state.hTime =[];
+		this.state.hIcon = [];
 		this.state.urlEnd ="/q/UK/London";
 		this.state.setLoc = "";		
 		this.state.imgSrc = "overcast";
 		this.fetchWeatherData();
+		this.fetchHourlyData();
 	}
 
 	// a call to fetch weather data via wunderground
@@ -59,7 +64,6 @@ export default class Iphone extends Component {
 			
 		       <div class={ style.container } style={bgpic}> 
 			<Button class={ style_iphone.button } clickFunction={() => this.changeScreen("homescreen")} buttonName = "Home"/>			
-			
 			<FavouriteScreen changeLocation={this.changeLocation} saveFavourite ={this.saveFavourite} favourites = {this.state.favourites} favurl = {this.state.favurl}/>
 			</div>
 			);	
@@ -75,7 +79,7 @@ export default class Iphone extends Component {
 				<CurrentWeather urlEnd ={this.state.urlEnd}/>
 				
 				<div className = {this.state.screen == "weekscreen"? style.hourlyBreakdowna :  style.hourlyBreakdown}  onclick = {() =>this.changeScreen("weekscreen")} > 
-					<HourlyWeather  urlEnd ={this.state.urlEnd} />
+					<HourlyWeather  urlEnd ={this.state.urlEnd} location ={this.setLoc} hTemp ={this.state.hTemp} hTime = {this.state.hTime} hCond = {this.state.hCond} hIcon ={this.state.hIcon}/>
 				</div>
 				<div className = {style.weeklyBreakdown}  onclick = {() =>this.changeScreen("homescreen")} > 
 					<WeekWeather  urlEnd ={this.state.urlEnd} />
@@ -84,8 +88,9 @@ export default class Iphone extends Component {
 		);			
 	}//end render
 	
+
 	changeScreen = (s) =>{		
-		console.log("GGGG");
+		console.log("Screen changed to " + s);
 		this.setState({ 
 				screen: s, 
 		});
@@ -93,16 +98,16 @@ export default class Iphone extends Component {
 	}
 
 	changeLocation= (loc,url) => {
-		this.setState({ setLoc : loc, urlEnd : url} );
-		
-		this.fetchWeatherData();
+		this.setState({ setLoc : loc, urlEnd : url} );		
+		this.fetchWeatherData();		
+		this.fetchHourlyData();
+		this.setState({ setLoc : loc, urlEnd : url} );	
 		console.log("location changed to "+url);
 			
 	}
 	saveFavourite= (fav,url) => {
 		this.setState({favourites: fav});		
 		this.setState({favurl: url});
-
 	}
 
 	//Parse the conditions and return the corresponding image URL
@@ -151,4 +156,32 @@ export default class Iphone extends Component {
 		this.setState({imgSrc : this.parseConditions(conditions)}); 
 		console.log(this.state.imgSrc); 
 	}
+
+	//EM set return of hourly api call to variables
+	parseHourlyResponse = (parsed_json) =>{
+		var hTemp = new Array();
+		var hCond =new Array();
+		var hTime = new Array();
+		var hIcon = new Array();
+		for(var i =0; i < 6; i++){
+			hTemp[i] = (parsed_json['hourly_forecast'][i]['temp']['metric']);
+			hCond[i] = (parsed_json['hourly_forecast'][i]['condition']);
+			hTime[i] =(parsed_json['hourly_forecast'][i]['FCTTIME']['hour']);
+			hIcon[i]=(parsed_json['hourly_forecast'][i]['icon_url']);
+		}		
+		this.setState({hTemp : hTemp, hCond : hCond, hTime : hTime, hIcon : hIcon});				    
+	}
+
+	//get hourly forecast
+	fetchHourlyData = () => {
+		var url = "http://api.wunderground.com/api/a5050eda0657b131/hourly/"+this.state.urlEnd+".json";		
+		$.ajax({
+			url: url,
+			dataType: "jsonp",
+			success : this.parseHourlyResponse,
+			error : function(req, err){ console.log('API call failed ' + err); 
+			console.log("hourly "+url)}
+		})
+	}
+
 }

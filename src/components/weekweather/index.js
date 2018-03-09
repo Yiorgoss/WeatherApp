@@ -48,14 +48,16 @@ export default class weekweather extends Component {
 		//em create hourly breakdown variable (div containers to be drawn to screen)
 		var  weekly = [];
 		for(var i =0; i <6; i++){		
-			weekly.push(<div> <Week day = {this.state.hDay[i]} time = {this.state.hTime[i]} templ = {this.state.hTempl[i]} temph = {this.state.hTemph[i]} icon = {this.state.hIcon[i]} cond ={this.state.hCond[i]}/> </div>);	
+			weekly.push(<Week day = {this.state.hDay[i]} time = {this.state.hTime[i]} hTempl = {this.state.hTempl[i]} hTemph = {this.state.hTemph[i]} icon = {this.state.hIcon[i]} cond ={this.state.hCond[i]}/> );	
 		}
 
 		// display all weather data
 		return (
 			//current weather	test°test
 		<div>			
-		<table>{weekly}</table>
+		<table>
+
+			{weekly}</table>
 		</div>		
 		);	
 

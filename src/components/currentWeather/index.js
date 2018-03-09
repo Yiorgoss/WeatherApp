@@ -60,13 +60,15 @@ export default class Iphone extends Component {
 		var location = parsed_json['current_observation']['display_location']['city'];
 		var temp_c = parsed_json['current_observation']['temp_c'];
 		var conditions = parsed_json['current_observation']['weather'];
+		var day = parsed_json['current_observation']['observation_time_rfc822'];
 		//var bgURL = parseConditions(conditions); //Get corresponding background image URL
 		// set states for fields so they could be rendered later on
 			this.setState({
 				locate: location,
 				temp: temp_c,
 				cond : conditions,
-				imgSrc: conditions,				
+				imgSrc: conditions,
+				day: day,				
 		});      
 	}
 }

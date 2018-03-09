@@ -27,8 +27,12 @@ export default class FavouriteScreen extends Component {
 
 		//create div elements with all favourites in
 		var favDivs = [];
+		var f  =[];
 		for(var i =0; i <this.props.favourites.length; i++){		
 			favDivs.push(  <Favourite url = {this.props.favurl[i]} loc = {this.props.favourites[i]} changeLocation = {this.props.changeLocation} /> );	
+		}
+		if(this.props.favourites.length == 0){
+			f.push(<tr class = {style.header}> Search for location to add to favourites</tr>);
 		}
 
 		return (		
@@ -36,11 +40,11 @@ export default class FavouriteScreen extends Component {
 			<div class = {style.rows}>
 			<div class = {style.row}>			
 				<input type="text" placeholder="Search location" onclick="this.select();" onkeydown={this.handleChangeFor('city')}  onchange = {() =>this.addToFavourite(this.state.location)} />
-				<div>{this.state.location}</div>			
+			<div>{this.state.location}</div>			
 				
 			</div>
 			<table>{favDivs}</table>
-
+			{f}
 			</div>
 		);	
 	
@@ -55,7 +59,6 @@ export default class FavouriteScreen extends Component {
 		}
 		this.props.saveFavourite(this.props.favourites,this.props.favurl);
 		console.log(this.props.favourites);
-		this.props.changeLocation(this.props.favourites,this.props.favurl);
 	}
 	
 	//perform an API call to search for a location name

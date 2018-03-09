@@ -22,12 +22,12 @@ export default class FavouriteScreen extends Component {
 		return (
 		//return location, time and graphic for a single favourite 
 		//table to keep elements inline		
-			<tr>
+			<tr>	
 				<td>{this.props.day}</td>
 				<td>{this.props.time}</td>
 				<td><img src={this.props.icon} alt={this.props.icon}> </img></td>				
-				<td>{this.props.hTempl}</td>
-				<td>{this.props.hTemph}</td>
+				<td> {this.props.hTempl}  °</td>
+				<td> {this.props.hTemph}  ° </td>
 				<td>{this.props.cond} </td>
 			</tr>
 		);	
