@@ -23,17 +23,22 @@ export default class Iphone extends Component {
 		this.state.cond = "";
 		this.state = {
 			favourites: [],
-			favurl: []
+			favurl: [],
+			hTemp :[],
+			hCond : [],
+			hTime : [],
+			hIcon : [],
+			urlEnd : "/q/UK/London",
+			setLoc : [],
+			hTemp : [],
+			hCond : [],
+			hIcon : [],
+			imgSrc : "overcast",
+			setLoc :[],
+			home : 'false',
+			tube :'false',
+			
 		};
-		this.state.hTemp = [];
-		this.state.hCond = [];
-		this.state.hTime =[];
-		this.state.hIcon = [];
-		this.state.urlEnd ="/q/UK/London";
-		this.state.setLoc = "";		
-		this.state.imgSrc = "overcast";
-		this.state.home = 'false';
-		this.state.tube = 'false';
 		this.fetchWeatherData();
 		this.fetchHourlyData();
 	}
@@ -67,7 +72,14 @@ export default class Iphone extends Component {
 			
 		       <div class={ style.container } style={bgpic}> 
 				<Button class={ style_iphone.button } clickFunction={() => this.changeScreen("homescreen")} buttonName = "Home"/>			
-				<FavouriteScreen changeLocation={this.changeLocation} saveFavourite ={this.saveFavourite} deleteFavourite = {this.deleteFavourite} favourites = {this.state.favourites} url = {this.state.urlEnd} favurl = {this.state.favurl}/>
+				<FavouriteScreen 
+						changeLocation={this.changeLocation} 
+					        saveFavourite ={this.saveFavourite} 
+						deleteFavourite = {this.deleteFavourite} 
+						favourites = {this.state.favourites} 
+						url = {this.state.urlEnd} 
+						favurl = {this.state.favurl}
+				/>
 			</div>
 			);	
 		}

@@ -7,6 +7,7 @@ import $ from 'jquery';
 import Button from '../button';
 import style from './style';
 import Favourite from '../Favourite';
+import GeoLoc from '../GeoLoc';
 import CurrentWeather from '../currentWeather';
 export default class FavouriteScreen extends Component {
 //var Iphone = React.createClass({
@@ -43,7 +44,7 @@ export default class FavouriteScreen extends Component {
 			<div class = {style.row}>			
 				<input type="text" placeholder="Search location" onclick="this.select();" onkeydown={this.handleChangeFor('city')}  onchange = {() =>this.addToFavourite(this.state.location)}   onfadeout = {() =>this.addToFavourite(this.state.location)} />
 			<div>{this.state.location}</div>			
-				
+			<div> <GeoLoc searchLocation = {this.geoLoc} /></div>	
 			</div>
 	
 			<table class= {style.favourites}>{favDivs}</table>
@@ -77,6 +78,11 @@ export default class FavouriteScreen extends Component {
 		    	success: this.parseResponse,
 			error : function(req, err){ console.log('API call failed ' + err); }				
 		});
+	}
+	
+	geoLoc = (location) => {	
+		this.searchLocation(location);
+		this.addToFavourite(this.state.location);
 	}
 	//parse response for auto complete, and extract the link and location name
 	parseResponse = (parsed_json) => {		
