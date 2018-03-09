@@ -13,11 +13,13 @@ export default class FavouriteScreen extends Component {
 	// a constructor with initial set states
 	constructor(props){
 		super(props);
-		this.state.screen = "";
-		this.state.cond = "";
-		this.state.selectedLocation = "";
-		this.state.location = "";
-		this.state.url = "/q/UK/London.json";
+		this.setState({
+			screen: "",
+			cond: "",
+			selectedLocation: "",
+			location: "",
+			url: "/q/UK/London.json",
+		});
 
 		
 	}

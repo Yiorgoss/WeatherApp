@@ -15,13 +15,15 @@ export default class weekweather extends Component {
 	constructor(props){
 		super(props);
 		//hourly states
-		this.state.hTempl = [];
-		this.state.hTemph = [];
-		this.state.hCond = [];
-		this.state.hDay = [];
-		this.state.hTime =[];
-		this.state.hIcon = [];
-		this.state.locationScreen = false;
+		this.setState({
+			hTempl	: [],
+			hTemph	: [],
+			hCond	: [],
+			hDay	: [],
+			hTime	: [],
+			hIcon	: [],
+			locationScreen : false,
+		});
 		// button display state
 		this.fetchHourlyData();
 	}

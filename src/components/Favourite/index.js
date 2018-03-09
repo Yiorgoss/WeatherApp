@@ -15,10 +15,12 @@ export default class FavouriteScreen extends Component {
 	// a constructor with initial set states
 	constructor(props){
 		super(props);
-		this.state.icon = "";
-		this.state.temp= "";
-		this.state.time = "";
-		this.state.cond = "";		
+		this.setState({
+			icon : "",
+			temp: "",
+			time : "",
+			cond : "",
+		})
 		this.fetchWeatherData();
 	}
 	
@@ -28,15 +30,15 @@ export default class FavouriteScreen extends Component {
 		return (
 		//return location, time and graphic for a single favourite 
 		//table to keep elements inline		
-			<tr>
-				
-				<td><input type="radio" name = "locselect" id ="locselect" onChange = {() => this.props.changeLocation(this.props.loc,this.props.url)}/></td>
-				<td>{this.props.loc}</td>
-				<td>{this.state.time}</td>
-				<td><img src={this.state.icon} alt={this.state.icon}> </img></td>		
-			</tr>
+		<tr>
+
+		<td><input type="radio" name = "locselect" id ="locselect" onChange = {() => this.props.changeLocation(this.props.loc,this.props.url)}/></td>
+		<td>{this.props.loc}</td>
+		<td>{this.state.time}</td>
+		<td><img src={this.state.icon} alt={this.state.icon}> </img></td>		
+		</tr>
 		);	
-	
+
 	}//end render	
 	
 	//fetch whether data for a URL and parse it 

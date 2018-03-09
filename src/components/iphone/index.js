@@ -20,19 +20,19 @@ export default class Iphone extends Component {
 	// a constructor with initial set states
 	constructor(props){
 		super(props);
-		this.state.screen = "homescreen";
-		this.state.cond = "";
 		this.state = {
+			screen: "homescreen",
+			cond: "",
 			favourites: [],
-			favurl: []
+			favurl: [],
+			hTemp: [],
+			hCond: [],
+			hTime: [],
+			hIcon: [],
+			urlEnd: "/q/Spain/Barcelona",
+			setLoc: "",		
+			imgSrc: "overcast",
 		};
-		this.state.hTemp = [];
-		this.state.hCond = [];
-		this.state.hTime =[];
-		this.state.hIcon = [];
-		this.state.urlEnd ="/q/Spain/Barcelona";
-		this.state.setLoc = "";		
-		this.state.imgSrc = "overcast";
 		this.fetchWeatherData();
 		this.fetchHourlyData();
 	}

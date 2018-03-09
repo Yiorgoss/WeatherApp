@@ -11,8 +11,6 @@ export default class Iphone extends Component {
 	}
 	convertToCity = (parsed_json) => {
 		var locationn = parsed_json['results'][3]['formatted_address'].split(", ");
-		console.log( parsed_json['results'][3]['formatted_address']);
-		console.log( locationn);
 		this.setState({
 			location: {
 				city: locationn[0],
