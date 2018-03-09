@@ -12,6 +12,8 @@ import CurrentWeather from '../currentWeather';
 import FavouriteScreen from '../FavouriteScreen';
 import HourlyWeather from '../hourlyWeather';
 import WeekWeather from '../weekweather';
+import GeoLocation from '../geoLocation';
+
 export default class Iphone extends Component {
 //var Iphone = React.createClass({
 
@@ -28,7 +30,7 @@ export default class Iphone extends Component {
 		this.state.hCond = [];
 		this.state.hTime =[];
 		this.state.hIcon = [];
-		this.state.urlEnd ="/q/UK/London";
+		this.state.urlEnd ="/q/Spain/Barcelona";
 		this.state.setLoc = "";		
 		this.state.imgSrc = "overcast";
 		this.fetchWeatherData();
@@ -75,7 +77,7 @@ export default class Iphone extends Component {
 				
 		       <div class={ style.container } style={bgpic}> 				
 				<Button class={ style_iphone.button } clickFunction={() => this.changeScreen("locationscreen")} buttonName = "locations"  />
-					
+				<GeoLocation />
 				<CurrentWeather urlEnd ={this.state.urlEnd}/>
 				
 				<div className = {this.state.screen == "weekscreen"? style.hourlyBreakdowna :  style.hourlyBreakdown}  onclick = {() =>this.changeScreen("weekscreen")} > 
