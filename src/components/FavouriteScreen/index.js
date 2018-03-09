@@ -49,13 +49,19 @@ export default class FavouriteScreen extends Component {
 		);	
 	
 	}//end render	
-	
 	//add a location to favourite list
 	addToFavourite = (location) => {
 		// console.log(this.location);
-		if( this.props.favourites.indexOf(location) === -1&&this.state.location!=""){
+		if( this.props.favourites.indexOf(location) === -1 && this.state.location!=""){
 			this.props.favourites= this.props.favourites.concat(this.state.location);
 			this.props.favurl = this.props.favurl.concat(this.state.url);
+		} 
+		else {
+			if( this.props.favourites.indexOf(location !== -1)) {
+				const index = this.props.favourites.indexOf(location);
+				this.props.favourites.splice( index, 1);
+				this.props.favurl.splice( index, 1);
+			}
 		}
 		this.props.saveFavourite(this.props.favourites,this.props.favurl);
 		console.log(this.props.favourites);
