@@ -1,13 +1,11 @@
 // import preact
 import { h, render, Component } from 'preact';
-// import stylesheets for ipad & button
+import styles from './style';
 // import jquery for API calls
 import $ from 'jquery';
 // import the Button component
 import Button from '../button';
 import CurrentWeather from '../currentWeather';
-
-import style from './style';
 import Favourite from '../Favourite';
 export default class FavouriteScreen extends Component {
 //var Iphone = React.createClass({
@@ -15,52 +13,126 @@ export default class FavouriteScreen extends Component {
 	// a constructor with initial set states
 	constructor(props){
 		super(props);
-		this.state.icon = "";
-		this.state.temp= "";
-		this.state.time = "";
-		this.state.cond = "";		
-		this.fetchWeatherData();
+		this.state.names = [];
+		this.state.status =[];
+			
+			
+		this.fetchTubeStatus();
 	}
 	
-	// the main render method for the iphone component
+	//render rows for each tube statoin
 	render() {    
+		var tubestat = [];
+		for(var i=0; i<10; i++){
+			var style = {
+				background: this.getTubeColor(this.state.names[i]),
+				paddingLeft : '10px',	
+				paddingRight :'10px',
+				paddingTop : '10px',
+				display : 'flex',
+				justifyContent: 'center'
+			}
+			tubestat.push(<tr><td class = {styles.tubeName} style = {style} >{this.state.names[i]}</td><td class = {styles.tubeStatus}>{this.state.status[i]}</td></tr>);			
+		}
 		
 		return (
-		//return location, time and graphic for a single favourite 
-		//table to keep elements inline		
-			<tr>
-				
-				<td><input type="radio" name = "locselect" id ="locselect" onChange = {() => this.props.changeLocation(this.props.loc,this.props.url)}/></td>
-				<td>{this.props.loc}</td>
-				<td>{this.state.time}</td>
-				<td><img src={this.state.icon} alt={this.state.icon}> </img></td>		
-			</tr>
+		//return the table of all tube stations	
+			<table class ={style.tubes}>{tubestat}
+			</table>
 		);	
 	
 	}//end render	
 	
-	//fetch whether data for a URL and parse it 
-	fetchWeatherData = () => {		
-		var url = "http://api.wunderground.com/api/a5050eda0657b131/conditions"+(this.props.url)+".json";
+	//switch color based on tube name
+	getTubeColor (tubeName){
+		switch(tubeName){
+			case "Bakerloo":
+			return "#b36305";
+			break;
+
+			case "Central":
+			return "#e32017";
+			break;
+
+			case "Circle":
+			return "#ffd300";
+			break;
+
+			case "District":
+			return "#00782a";
+			break;
+
+			case "Dlr":
+			return "#00A4A7";
+			break;
+
+			case "Hammersmith & City":
+			return "#f3a9bb";
+			break;
+
+			case "Jubilee":
+			return "#a0a5a9";
+			break;
+
+			case "Metropolitan":
+			return "#9b0056";
+			break;
+
+			case "Northern":
+			return "#000";
+			break;
+
+			case "Overground ":
+			return "#ee7c0e";
+			break;
+			
+			case "Piccadilly":
+			return "#003688";
+			break;
+
+			case "Tramlink":
+			return "#84B817";
+			break;
+
+			case "Victoria":
+			return "#0098d4";
+			break;
+			
+			case "Waterloocity ":
+			return "#95cdba";
+			break;
+
+
+
+		}
+		return "#0000000";		
+
+	}
+	//fetch tube data and parse it 
+	fetchTubeStatus = () => {		
+		var url = "https://api.tfl.gov.uk/Line/Mode/tube/Status";
 		$.ajax({
 			url: url,
-			dataType: "jsonp",
-			success : this.parseFavourite,
+			success : this.parseTube,
 			error : function(req, err){ console.log('API call failed ' + err);
 			
-			console.log(url);}
+			}
 		})
-		console.log(" favourite "+url);
+		console.log(" tube status "+url);
 	}	
 	
 
 	//parse the api call for a single favourite and extract the icon and time
-	parseFavourite = (parsed_json) => {
-		var icon=(parsed_json['current_observation']['icon_url']);
-		var time=(parsed_json['current_observation']['observation_time_rfc822']);
-		this.setState({icon : icon, time : time});
-		console.log(time);
-		console.log(this.state.time);
+	parseTube = (parsed_json) => {
+		var status =[];
+		var names =[];
+		for(var i=0; i < 10; i++){
+			names[i] = parsed_json[i]['name'];
+			status[i] = parsed_json[i]['lineStatuses'][0]['statusSeverityDescription'];
+			console.log("test" +parsed_json[i]['lineStatuses'][0]['statusSeverityDescription']);
+		}
+		this.setState({names : names, status: status});	
+		
 	}
 
 	

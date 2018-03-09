@@ -11,6 +11,7 @@ import CurrentWeather from '../currentWeather';
 
 import FavouriteScreen from '../FavouriteScreen';
 import HourlyWeather from '../hourlyWeather';
+import TubeStatus from '../TubeStatus';
 import WeekWeather from '../weekweather';
 export default class Iphone extends Component {
 //var Iphone = React.createClass({
@@ -31,6 +32,8 @@ export default class Iphone extends Component {
 		this.state.urlEnd ="/q/UK/London";
 		this.state.setLoc = "";		
 		this.state.imgSrc = "overcast";
+		this.state.home = 'false';
+		this.state.tube = 'false';
 		this.fetchWeatherData();
 		this.fetchHourlyData();
 	}
@@ -63,8 +66,8 @@ export default class Iphone extends Component {
 			//locatoin screen
 			
 		       <div class={ style.container } style={bgpic}> 
-			<Button class={ style_iphone.button } clickFunction={() => this.changeScreen("homescreen")} buttonName = "Home"/>			
-			<FavouriteScreen changeLocation={this.changeLocation} saveFavourite ={this.saveFavourite} favourites = {this.state.favourites} favurl = {this.state.favurl}/>
+				<Button class={ style_iphone.button } clickFunction={() => this.changeScreen("homescreen")} buttonName = "Home"/>			
+				<FavouriteScreen changeLocation={this.changeLocation} saveFavourite ={this.saveFavourite} deleteFavourite = {this.deleteFavourite} favourites = {this.state.favourites} url = {this.state.urlEnd} favurl = {this.state.favurl}/>
 			</div>
 			);	
 		}
@@ -78,12 +81,14 @@ export default class Iphone extends Component {
 					
 				<CurrentWeather urlEnd ={this.state.urlEnd}/>
 				
-				<div className = {this.state.screen == "weekscreen"? style.hourlyBreakdowna :  style.hourlyBreakdown}  onclick = {() =>this.changeScreen("weekscreen")} > 
+				<div className = {this.state.home ? style.hourlyBreakdown :  style.hourlyBreakdowna}  onclick = {() =>this.toggleHome()} > 
 					<HourlyWeather  urlEnd ={this.state.urlEnd} location ={this.setLoc} hTemp ={this.state.hTemp} hTime = {this.state.hTime} hCond = {this.state.hCond} hIcon ={this.state.hIcon}/>
 				</div>
-				<div className = {style.weeklyBreakdown}  onclick = {() =>this.changeScreen("homescreen")} > 
-					<WeekWeather  urlEnd ={this.state.urlEnd} />
-				</div>				
+				<div className = {this.state.tube? style.Breakdowna:style.Breakdown}  onclick = {() =>this.toggleTube()} > 				
+					<WeekWeather  urlEnd ={this.state.urlEnd} />		
+					<TubeStatus  urlEnd ={this.state.urlEnd} />
+				</div>
+							
 		       </div>
 		);			
 	}//end render
@@ -93,21 +98,47 @@ export default class Iphone extends Component {
 		console.log("Screen changed to " + s);
 		this.setState({ 
 				screen: s, 
-		});
-		
+				home : 'false'
+		});		
+	}
+	
+	toggleHome = () =>{	  
+
+	    this.setState({home : !this.state.home});
+
+	}
+	toggleTube = () =>{	  
+
+	    this.setState({tube : !this.state.tube});
+	    console.log("tube set to "+this.state.tube);
+
 	}
 
 	changeLocation= (loc,url) => {
-		this.setState({ setLoc : loc, urlEnd : url} );		
+		this.setState({ setLoc : loc, urlEnd : url, screen : "homescreen"} );		
 		this.fetchWeatherData();		
 		this.fetchHourlyData();
 		this.setState({ setLoc : loc, urlEnd : url} );	
 		console.log("location changed to "+url);
+		
 			
 	}
 	saveFavourite= (fav,url) => {
 		this.setState({favourites: fav});		
 		this.setState({favurl: url});
+	}
+
+	deleteFavourite= (fav,url) => {
+	    var tmpfav =this.state.favourites;
+	    var tmpurl= this.state.favurl;
+            var index = tmpurl.indexOf(url);
+	    if(index>=0){		
+	    tmpfav.splice(index,1);
+	    tmpurl.splice(index,1);
+	    }
+		this.setState({favourites: tmpfav});		
+		this.setState({favurl: tmpurl});
+	    console.log("deleteing" + fav);
 	}
 
 	//Parse the conditions and return the corresponding image URL

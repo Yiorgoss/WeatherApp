@@ -27,15 +27,13 @@
 	font-weight: 400;	
 }
 .conditions {
-	flex: 1;
 	font-size: 1em;
 }
 .temperature {
 	flex: 2;
 	margin-top: 0;
-	font-size: 4.8em;
+	font-size: 3em;
 	font-weight: 300;
-	letter-spacing: -12px;
 }
 .filled:after {
 	content: "°";
@@ -55,11 +53,6 @@
     columns : 6
 }
 
-table, th, td {
-  margin-left : 10px;
-
-  margin-right : 10px;
-}
 
 .hourlyBreakdown{
    background-color :rgba(0,0,0,0.2);
@@ -68,7 +61,11 @@ table, th, td {
    border-bottom-style: solid;
    padding: 10px;
     margin-top : 20em;
+
+  animation-duration: 3s;
+  animation-name: slidedown;
 }
+
 
 .hourlyBreakdowna{
    background-color :rgba(0,0,0,0.2);
@@ -80,11 +77,52 @@ table, th, td {
   
   animation-duration: 3s;
   animation-name: slidein;
+  -webkit-animation-fill-mode: forwards;
+}
+.Breakdowna{
+   width: 200%;
+   column-count : 2;
+   background-color :rgba(0,0,0,0.2);
+   border-color : rgba(0,0,0,0.4);
+   border-top-style: solid;
+   border-bottom-style: solid;
+   padding: 10px;
+  
+  animation-duration: 3s;
+  animation-name: slideright;
 
-	-webkit-animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
 }
 
+.Breakdown{
+   
+   width: 200%;
+   column-count : 2;
+   background-color :rgba(0,0,0,0.2);
+   border-color : rgba(0,0,0,0.4);
+   border-top-style: solid;
+   border-bottom-style: solid;
+   padding: 10px;
+  
+  animation-duration: 3s;
+  animation-name: slideleft;
 
+  -webkit-animation-fill-mode: forwards;
+}
+
+@keyframes slideleft {
+
+  to {
+    margin-left:-100%;  
+  }
+}
+@keyframes slideright {
+
+  to {
+    margin-left:0%;
+  
+  }
+}
 @keyframes slidein {
 
   to {
@@ -92,4 +130,12 @@ table, th, td {
   
   }
 }
+@keyframes slidedown {
+
+  to {
+    margin-top:20em;
+  
+  }
+}
+
 

@@ -16,12 +16,11 @@ export default class Iphone extends Component {
 		super(props);
 	}
 
-	// the main render method for the iphone component
+	//render weather data 
 	render() {
     		
-		// display all weather data
 		return (
-			//current weather	°		       
+			//current weather		       
 						
 			<div  class = {style.column}>			
 			<div> <img src={this.props.icon} alt={this.props.icon}></img> </div>

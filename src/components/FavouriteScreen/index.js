@@ -7,6 +7,7 @@ import $ from 'jquery';
 import Button from '../button';
 import style from './style';
 import Favourite from '../Favourite';
+import CurrentWeather from '../currentWeather';
 export default class FavouriteScreen extends Component {
 //var Iphone = React.createClass({
 
@@ -24,27 +25,29 @@ export default class FavouriteScreen extends Component {
 	
 	// the main render method for the iphone component
 	render() {    	
-
 		//create div elements with all favourites in
 		var favDivs = [];
 		var f  =[];
-		for(var i =0; i <this.props.favourites.length; i++){		
-			favDivs.push(  <Favourite url = {this.props.favurl[i]} loc = {this.props.favourites[i]} changeLocation = {this.props.changeLocation} /> );	
+		for(var i = this.props.favourites.length-1; i >=0; i--){		
+			favDivs.push(  <Favourite url = {this.props.favurl[i]} loc = {this.props.favourites[i]} deleteFavourite = {this.props.deleteFavourite} changeLocation = {this.props.changeLocation} /> );	
 		}
 		if(this.props.favourites.length == 0){
-			f.push(<tr class = {style.header}> Search for location to add to favourites</tr>);
+			f.push(<tr class = {style.addfavourites}> Search for location to add to favourites</tr>);
 		}
 
 		return (		
+     
 			//display location information	
 			<div class = {style.rows}>
+			<CurrentWeather urlEnd = {this.props.url}/>
 			<div class = {style.row}>			
-				<input type="text" placeholder="Search location" onclick="this.select();" onkeydown={this.handleChangeFor('city')}  onchange = {() =>this.addToFavourite(this.state.location)} />
+				<input type="text" placeholder="Search location" onclick="this.select();" onkeydown={this.handleChangeFor('city')}  onchange = {() =>this.addToFavourite(this.state.location)}   onfadeout = {() =>this.addToFavourite(this.state.location)} />
 			<div>{this.state.location}</div>			
 				
 			</div>
-			<table>{favDivs}</table>
-			{f}
+	
+			<table class= {style.favourites}>{favDivs}</table>
+			{f} 
 			</div>
 		);	
 	

@@ -1,73 +1,220 @@
-// import preact 
+// import preact
 import { h, render, Component } from 'preact';
 // import stylesheets for ipad & button
 import style from './style';
-import style_ipad from '../button/style_ipad';
+import style_iphone from '../button/style_iphone';
 // import jquery for API calls
 import $ from 'jquery';
 // import the Button component
 import Button from '../button';
+import CurrentWeather from '../currentWeather';
 
-export default class Ipad extends Component {
-//var Ipad = React.createClass({
+import FavouriteScreen from '../FavouriteScreen';
+import HourlyWeather from '../hourlyWeather';
+import TubeStatus from '../TubeStatus';
+import WeekWeather from '../weekweather';
+export default class Iphone extends Component {
+//var Iphone = React.createClass({
 
 	// a constructor with initial set states
 	constructor(props){
 		super(props);
-		// temperature state
-		this.state.temp = "";
-		// button display state
-		this.setState({ display: true });
-    }
+		this.state.screen = "homescreen";
+		this.state.cond = "";
+		this.state = {
+			favourites: [],
+			favurl: []
+		};
+		this.state.hTemp = [];
+		this.state.hCond = [];
+		this.state.hTime =[];
+		this.state.hIcon = [];
+		this.state.urlEnd ="/q/UK/London";
+		this.state.setLoc = "";		
+		this.state.imgSrc = "overcast";
+		this.state.home = 'false';
+		this.state.tube = 'false';
+		this.fetchWeatherData();
+		this.fetchHourlyData();
+	}
 
 	// a call to fetch weather data via wunderground
 	fetchWeatherData = () => {
-		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/country-code/city.json
-		var url = "http://api.wunderground.com/api/c78f1a13d2ca6971/conditions/q/UK/London.json";
+		// API URL with a structure of : http://api.wunderground.com/api/key/feature/q/country-code/city.json
+		var url = "http://api.wunderground.com/api/a5050eda0657b131/conditions"+(this.state.urlEnd)+".json";
+		console.log(url);
 		$.ajax({
 			url: url,
 			dataType: "jsonp",
 			success : this.parseResponse,
-			error : function(req, err){ console.log('API call failed ' + err); }
+			error : function(req, err){ console.log('API call failed ' + err);
+			
+			console.log("main screen "+this.state.urlEnd) }
 		})
-		// once the data grabbed, hide the button
-		this.setState({ display: false });
-	}
+	}	
 
 	// the main render method for the iphone component
 	render() {
-		// check if temperature data is fetched, if so add the sign styling to the page
+		//print background depending on temperature
 		const tempStyles = this.state.temp ? `${style.temperature} ${style.filled}` : style.temperature;
+
+	
+    		var bgpic = {backgroundImage: 'url(../../assets/backgrounds/'+this.state.imgSrc+'.jpg)' 	};
+		//display location screen
+		if(this.state.screen == "locationscreen"){
+			return (
+			//locatoin screen
+			
+		       <div class={ style.container } style={bgpic}> 
+				<Button class={ style_iphone.button } clickFunction={() => this.changeScreen("homescreen")} buttonName = "Home"/>			
+				<FavouriteScreen changeLocation={this.changeLocation} saveFavourite ={this.saveFavourite} deleteFavourite = {this.deleteFavourite} favourites = {this.state.favourites} url = {this.state.urlEnd} favurl = {this.state.favurl}/>
+			</div>
+			);	
+		}
+		
 
 		// display all weather data
 		return (
-			<div class={ style.container }>
-				<div class={ style.header }>
-					<div class={ style.city }>{ this.state.currentCity }</div>
-					<div class={ style.country }>{ this.state.currentCountry }</div>
-					<div class={ style.conditions }>{ this.state.cond }</div>
-					<span class={ style.temperature }>{ this.state.temp }</span>
+				
+		       <div class={ style.container } style={bgpic}> 				
+				<Button class={ style_iphone.button } clickFunction={() => this.changeScreen("locationscreen")} buttonName = "locations"  />
+					
+				<CurrentWeather urlEnd ={this.state.urlEnd}/>
+				
+				<div className = {this.state.home ? style.hourlyBreakdown :  style.hourlyBreakdowna}  onclick = {() =>this.toggleHome()} > 
+				<HourlyWeather  urlEnd ={this.state.urlEnd} location ={this.setLoc} hTemp ={this.state.hTemp} hTime = {this.state.hTime} hCond = {this.state.hCond} hIcon ={this.state.hIcon}/>
 				</div>
-				<div class={ style.details }></div>
-				<div class={ style_ipad.container }>
-					{ this.state.display ? <Button class={ style_ipad.button } clickFunction={ this.fetchWeatherData }/ > : null }
+				<div className = {this.state.tube? style.Breakdowna:style.Breakdown} > 				
+					<div style = {"column-count : 2 "}><WeekWeather  urlEnd ={this.state.urlEnd} />		
+					<TubeStatus  urlEnd ={this.state.urlEnd} /></div>
+
+	
 				</div>
-			</div>
-		);
+							
+		       </div>
+		);			
+	}//end render
+	
+
+	changeScreen = (s) =>{		
+		console.log("Screen changed to " + s);
+		this.setState({ 
+				screen: s, 
+				home : 'false'
+		});		
+	}
+	
+	toggleHome = () =>{	  
+
+	    this.setState({home : !this.state.home});
+
+	}
+	toggleTube = () =>{	  
+
+	    this.setState({tube : !this.state.tube});
+	    console.log("tube set to "+this.state.tube);
+
 	}
 
+	changeLocation= (loc,url) => {
+		this.setState({ setLoc : loc, urlEnd : url, screen : "homescreen"} );		
+		this.fetchWeatherData();		
+		this.fetchHourlyData();
+		this.setState({ setLoc : loc, urlEnd : url} );	
+		console.log("location changed to "+url);
+		
+			
+	}
+	saveFavourite= (fav,url) => {
+		this.setState({favourites: fav});		
+		this.setState({favurl: url});
+	}
+
+	deleteFavourite= (fav,url) => {
+	    var tmpfav =this.state.favourites;
+	    var tmpurl= this.state.favurl;
+            var index = tmpurl.indexOf(url);
+	    if(index>=0){		
+	    tmpfav.splice(index,1);
+	    tmpurl.splice(index,1);
+	    }
+		this.setState({favourites: tmpfav});		
+		this.setState({favurl: tmpurl});
+	    console.log("deleteing" + fav);
+	}
+
+	//Parse the conditions and return the corresponding image URL
+	parseConditions = (conditions) => {
+    
+		if(conditions.search("Clear")>=0)			//Clear
+			return "clear";
+
+		if(conditions == "Overcast") 				//Overcast
+			return "overcast";
+		
+		if(conditions.search(/drizzle/i) >= 0)		//Light Rain
+			return "lightrain";
+
+		if(conditions.search(/rain/i) >= 0)			//Heavy rain
+			return "rain";
+		
+		if(conditions.search("Cloud") >= 0)		//Cloudy
+			return "clouds";
+		
+		if(conditions.search(/thunderstorm/i) >= 0) //Thunderstorm
+			return "thunder";
+		
+		if(conditions.search(/snow/i) >= 0)			//Snow
+			return "snow";
+		
+		if(conditions.search(/ice/i) >=0)			//Snow
+			return "ice";
+
+		return "clouds"; //Default
+	}
+
+	//set the return of API calls to location,temp and conditions variables
 	parseResponse = (parsed_json) => {
-		var city = parsed_json['current_observation']['display_location']['city'];
-		var country = parsed_json['current_observation']['display_location']['country'];
+		var location = parsed_json['current_observation']['display_location']['city'];
 		var temp_c = parsed_json['current_observation']['temp_c'];
 		var conditions = parsed_json['current_observation']['weather'];
-
-		// set the states for fields so they could be rendered later on
-		this.setState({
-			currentCity: city,
-			currentCountry: country,
-			temp: temp_c,
-			cond : conditions
-		});      
+		//var bgURL = parseConditions(conditions); //Get corresponding background image URL
+		// set states for fields so they could be rendered later on
+			this.setState({
+				locate: location,
+				temp: temp_c,
+				cond : conditions,
+				imgSrc: conditions,				
+		});    
+		this.setState({imgSrc : this.parseConditions(conditions)}); 
+		console.log(this.state.imgSrc); 
 	}
+
+	//EM set return of hourly api call to variables
+	parseHourlyResponse = (parsed_json) =>{
+		var hTemp = new Array();
+		var hCond =new Array();
+		var hTime = new Array();
+		var hIcon = new Array();
+		for(var i =0; i < 6; i++){
+			hTemp[i] = (parsed_json['hourly_forecast'][i]['temp']['metric']);
+			hCond[i] = (parsed_json['hourly_forecast'][i]['condition']);
+			hTime[i] =(parsed_json['hourly_forecast'][i]['FCTTIME']['hour']);
+			hIcon[i]=(parsed_json['hourly_forecast'][i]['icon_url']);
+		}		
+		this.setState({hTemp : hTemp, hCond : hCond, hTime : hTime, hIcon : hIcon});				    
+	}
+
+	//get hourly forecast
+	fetchHourlyData = () => {
+		var url = "http://api.wunderground.com/api/a5050eda0657b131/hourly/"+this.state.urlEnd+".json";		
+		$.ajax({
+			url: url,
+			dataType: "jsonp",
+			success : this.parseHourlyResponse,
+			error : function(req, err){ console.log('API call failed ' + err); 
+			console.log("hourly "+url)}
+		})
+	}
+
 }

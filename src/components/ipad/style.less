@@ -8,6 +8,7 @@
   text-align: center;
   padding-top: 120px;
   margin: 0 auto;
+ overflow: hidden;
 }
 .header {
 	display: flex;
@@ -46,4 +47,89 @@
 	display: inline-block;
 	padding-top: 10px;
 	vertical-align: top;
+}
+
+
+.hourlyBreakdown{
+   background-color :rgba(0,0,0,0.2);
+   border-color : rgba(0,0,0,0.4);
+   border-top-style: solid;
+   border-bottom-style: solid;
+   padding: 10px;
+    margin-top : 20em;
+
+  animation-duration: 3s;
+  animation-name: slidedown;
+}
+
+
+.hourlyBreakdowna{
+   background-color :rgba(0,0,0,0.2);
+   border-color : rgba(0,0,0,0.4);
+   border-top-style: solid;
+   border-bottom-style: solid;
+   padding: 10px;
+   margin-top : 15em;
+  
+  animation-duration: 3s;
+  animation-name: slidein;
+  -webkit-animation-fill-mode: forwards;
+}
+.Breakdowna{
+   width: 200%;
+   column-count : 2;
+   background-color :rgba(0,0,0,0.2);
+   border-color : rgba(0,0,0,0.4);
+   border-top-style: solid;
+   border-bottom-style: solid;
+   padding: 10px;
+  
+  animation-duration: 3s;
+  animation-name: slideright;
+
+  -webkit-animation-fill-mode: forwards;
+}
+
+.Breakdown{
+   
+   width: 200%;
+   column-count : 2;
+   background-color :rgba(0,0,0,0.2);
+   border-color : rgba(0,0,0,0.4);
+   border-top-style: solid;
+   border-bottom-style: solid;
+   padding: 10px;
+  
+  animation-duration: 3s;
+  animation-name: slideleft;
+
+  -webkit-animation-fill-mode: forwards;
+}
+
+@keyframes slideleft {
+
+  to {
+    margin-left:-100%;  
+  }
+}
+@keyframes slideright {
+
+  to {
+    margin-left:0%;
+  
+  }
+}
+@keyframes slidein {
+
+  to {
+    margin-top:0%;
+  
+  }
+}
+@keyframes slidedown {
+
+  to {
+    margin-top:20em;
+  
+  }
 }

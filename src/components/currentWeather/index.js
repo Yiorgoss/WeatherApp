@@ -44,9 +44,9 @@ export default class Iphone extends Component {
 		return (
 			//current weather	°
 			
-			<div class={ style.container}>
-				<div class={ style.city }>{ this.state.locate }</div>
+			<div class={ style.container}>				
 				<div class={ style.conditions }>{ this.state.cond }</div>
+				<div class={ style.city }>{ this.state.locate }</div>
 				<div class={ tempStyles }>{ this.state.temp }</div>
 			</div>			
 				

@@ -24,16 +24,19 @@ export default class FavouriteScreen extends Component {
 	
 	// the main render method for the iphone component
 	render() {    
+		var delIcon = '../../assets/icons/delIcon.png'
 		
 		return (
 		//return location, time and graphic for a single favourite 
 		//table to keep elements inline		
-			<tr>
+			<tr >
 				
-				<td><input type="radio" name = "locselect" id ="locselect" onChange = {() => this.props.changeLocation(this.props.loc,this.props.url)}/></td>
-				<td>{this.props.loc}</td>
-				<td>{this.state.time}</td>
-				<td><img src={this.state.icon} alt={this.state.icon}> </img></td>		
+				<td class = {style.favourite}><input type="radio" name = "locselect" id ="locselect"  onclick = {() => this.props.changeLocation(this.props.loc,this.props.url)}/></td>
+				<td class = {style.favourite}><img src = {delIcon} height="20" width="20" name = "delete" id ="delete"  onclick = {() => this.props.deleteFavourite(this.props.loc,this.props.url)}/></td>
+				{document.getElementsByName('locselect').checked = false}
+				<td class = {style.favourite}>{this.props.loc}</td>
+				<td class = {style.favourite}>{this.state.time}</td>
+				<td class = {style.favourite}><img src={this.state.icon} alt={this.state.icon}> </img></td>		
 			</tr>
 		);	
 	
