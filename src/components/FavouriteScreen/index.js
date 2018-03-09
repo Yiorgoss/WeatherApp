@@ -5,10 +5,8 @@ import { h, render, Component } from 'preact';
 import $ from 'jquery';
 // import the Button component
 import Button from '../button';
-import CurrentWeather from '../currentWeather';
-
+import style from './style';
 import Favourite from '../Favourite';
-import HourlyWeather from '../hourlyWeather';
 export default class FavouriteScreen extends Component {
 //var Iphone = React.createClass({
 
@@ -18,46 +16,49 @@ export default class FavouriteScreen extends Component {
 		this.state.screen = "";
 		this.state.cond = "";
 		this.state.selectedLocation = "";
-		this.state.location = "London";
-		this.state.favourites = "";
-		this.state.testLocation = "";
+		this.state.location = "";
+		this.state.url = "/q/UK/London.json";
 
+		
 	}
 	
-
 	// the main render method for the iphone component
 	render() {    	
 
-		return (
-			
-			<div>
-			
-				<input type="text" onKeyDown={this.handleChangeFor('city')}  />
-			<div>
-				{this.state.location.city}
-			</div><div>
-				{this.state.testLocation}
+		//create div elements with all favourites in
+		var favDivs = [];
+		for(var i =0; i <this.props.favourites.length; i++){		
+			favDivs.push(  <Favourite url = {this.props.favurl[i]} loc = {this.props.favourites[i]} changeLocation = {this.props.changeLocation} /> );	
+		}
+
+		return (		
+			//display location information	
+			<div class = {style.rows}>
+			<div class = {style.row}>			
+				<input type="text" placeholder="Search location" onclick="this.select();" onkeydown={this.handleChangeFor('city')}  onchange = {() =>this.addToFavourite(this.state.location)} />
+				<div>{this.state.location}</div>			
+				
 			</div>
-				<Favourite favourites={this.state.favourites} />
-		<Button clickFunction={() => this.addToFavourite(this.state.location) } display="Add To Favourite" />
-	
+			<table>{favDivs}</table>
+
 			</div>
-		);				
-
-
+		);	
 	
-	}//end render
+	}//end render	
 	
-
+	//add a location to favourite list
 	addToFavourite = (location) => {
 		// console.log(this.location);
-		this.setState({
-			favourites: this.state.location,
-		});
-		console.log(this.state.favourites);
-
+		if( this.props.favourites.indexOf(location) === -1&&this.state.location!=""){
+			this.props.favourites= this.props.favourites.concat(this.state.location);
+			this.props.favurl = this.props.favurl.concat(this.state.url);
+		}
+		this.props.saveFavourite(this.props.favourites,this.props.favurl);
+		console.log(this.props.favourites);
+		this.props.changeLocation(this.props.favourites,this.props.favurl);
 	}
 	
+	//perform an API call to search for a location name
 	searchLocation = (location) => {
 		$.ajax({
 	  		url:      "http://autocomplete.wunderground.com/aq",
@@ -68,20 +69,21 @@ export default class FavouriteScreen extends Component {
 				query:  location,
 	  	  	},
 		    	success: this.parseResponse,
-			error : function(req, err){ console.log('API call failed ' + err); }		
-		
+			error : function(req, err){ console.log('API call failed ' + err); }				
 		});
-	}	
-
-
+	}
+	//parse response for auto complete, and extract the link and location name
 	parseResponse = (parsed_json) => {		
 		var loc = parsed_json["RESULTS"][0]['name'];
-		this.setState({testLocation : loc});	
-		this.setState({location : loc});	
-		
-		this.props.changeLocation(loc);
+		var url = parsed_json["RESULTS"][0]['l'];
+		var type = parsed_json["RESULTS"][0]['type'];
+		//only allow cities (country API links are incompatible with hourly breakdown)
+		if(type == "city"){
+			this.setState({location : loc});	
+			this.setState({url : url});
+		} 		
 	}
-
+	
 	handleChangeFor = (propertyName) => (event) => {
 		const { location } = this.state;
 		const newLocation = {

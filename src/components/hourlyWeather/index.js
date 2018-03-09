@@ -8,6 +8,7 @@ import $ from 'jquery';
 // import 
 import CurrentWeather from '../currentWeather';
 import HourlyWeather from '../hourlyWeather';
+import HourWeather from '../hourWeather';
 export default class Iphone extends Component {
 //var Iphone = React.createClass({
 
@@ -21,18 +22,18 @@ export default class Iphone extends Component {
 		this.state.hIcon = [];
 		this.state.locationScreen = false;
 		// button display state
-	
-		this.fetchHourlyData();
+		this.fetchHourlyData(this.props.urlEnd);
 	}
 
 	//get hourly forecast
-	fetchHourlyData = () => {
-		var url = "http://api.wunderground.com/api/a5050eda0657b131/hourly/q/UK/London.json";		
+	fetchHourlyData = (urlE) => {
+		var url = "http://api.wunderground.com/api/a5050eda0657b131/hourly/"+urlE+".json";		
 		$.ajax({
 			url: url,
 			dataType: "jsonp",
 			success : this.parseHourlyResponse,
-			error : function(req, err){ console.log('API call failed ' + err); }
+			error : function(req, err){ console.log('API call failed ' + err); 
+			console.log("hourly "+url)}
 		})
 	}
 
@@ -42,30 +43,17 @@ export default class Iphone extends Component {
 	render() {
     		
 		//em create hourly breakdown variable (div containers to be drawn to screen)
-		var hourlyTemp = [];
-		var hourlyCond = [];
-		var hourlyTime = [];
-		var hourlyIcon =[];
-		for(var i =0; i <6; i++){
-			hourlyTemp.push(<div class = {style.row}> {this.state.hTemp[i]}°  </div>);
-			hourlyTime.push(<div class = {style.row}> {this.state.hTime[i]}:00  </div>);			
-			hourlyIcon.push(<img src={this.state.hIcon[i]} alt={this.state.hIcon[i]}> </img>);		
-			hourlyCond.push(<div class = {style.row}> {this.state.hCond[i]} </div>);	
-	
+		var hourly = [];
+		for(var i =0; i <6; i++){		
+			hourly.push(<div class = {style.row}> <HourWeather time = {this.state.hTime[i]+":00"} temp = {this.state.hTemp[i]} icon = {this.state.hIcon[i]}/> </div>);	
 		}
 
 		// display all weather data
 		return (
 			//current weather	°
-		       <div> 
-				<div class = {style.rows}> {hourlyIcon} </div>
-				<div class = {style.rows}>{hourlyTemp}</div>	
-				<div class = {style.rows}>{hourlyTime} </div>				
-				
-			</div>
-
-		);			
-
+		       <div class = {style.column6}>{hourly}</div>
+			
+		);	
 
 	
 	}//end render
